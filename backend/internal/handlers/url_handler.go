@@ -19,11 +19,13 @@ func CreateShortURL(c *gin.Context) {
 		return
 	}
 
-	url, err := services.CreateShortURL(req.URL, req.CustomCode)
+	userID := int(c.GetFloat64("user_id"))
+
+	url, err := services.CreateShortURL(req.URL, req.CustomCode, userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to create short URL",
+			"error": err.Error(),
 		})
 		return
 	}
@@ -47,4 +49,20 @@ func RedirectURL(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusMovedPermanently, url.OriginalURL)
+}
+
+func GetMyURLs(c *gin.Context) {
+	userID := int(c.GetFloat64("user_id"))
+
+	urls, err := services.GetUserURLs(userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to fetch URLs",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"urls": urls,
+	})
 }

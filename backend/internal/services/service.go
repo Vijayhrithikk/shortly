@@ -10,10 +10,10 @@ import (
 	"github.com/Vijayhrithikk/shortly/internal/repositories"
 )
 
-func CreateShortURL(originalURL string, customCode string) (*models.URL, error) {
+func CreateShortURL(originalURL string, customCode string, userID int) (*models.URL, error) {
 	normalizedURL := normalizeURL(originalURL)
 
-	existingURL, err := repositories.GetURLByOriginal(normalizedURL)
+	existingURL, err := repositories.GetURLByOriginal(userID, normalizedURL)
 
 	if err == nil {
 		return existingURL, nil
@@ -32,6 +32,7 @@ func CreateShortURL(originalURL string, customCode string) (*models.URL, error) 
 	url := models.URL{
 		OriginalURL: normalizedURL,
 		ShortCode:   shortCode,
+		UserID:      userID,
 	}
 
 	err = repositories.SaveURL(url)
@@ -68,4 +69,8 @@ func generateShortCode() string {
 	}
 
 	return string(code)
+}
+
+func GetUserURLs(userID int) ([]models.URL, error) {
+	return repositories.GetURLsByUserID(userID)
 }

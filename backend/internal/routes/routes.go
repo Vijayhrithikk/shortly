@@ -19,5 +19,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	}
 	router.POST("/shorten", middleware.AuthMiddlware(cfg), handlers.CreateShortURL)
 	router.GET("/:code", handlers.RedirectURL)
+	router.GET("/my-urls", middleware.AuthMiddlware(cfg), handlers.GetMyURLs)
 
 }
