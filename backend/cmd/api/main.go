@@ -11,7 +11,7 @@ func main() {
 
 	cfg := config.LoadConfig()
 	database.ConnectDB(cfg)
-
+	database.ConnectRedis()
 	router := gin.Default()
 	routes.SetupRoutes(router, cfg)
 	router.Run(":8080")

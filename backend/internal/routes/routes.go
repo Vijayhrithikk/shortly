@@ -17,8 +17,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		authRoutes.POST("/signup", authRouter.Signup)
 		authRoutes.POST("/login", authRouter.Login)
 	}
-	router.POST("/shorten", middleware.AuthMiddlware(cfg), handlers.CreateShortURL)
+	router.POST("/shorten", middleware.AuthMiddleware(cfg), handlers.CreateShortURL)
 	router.GET("/:code", handlers.RedirectURL)
-	router.GET("/my-urls", middleware.AuthMiddlware(cfg), handlers.GetMyURLs)
-
+	router.GET("/my-urls", middleware.AuthMiddleware(cfg), handlers.GetMyURLs)
+	router.DELETE("/urls/:id", middleware.AuthMiddleware(cfg), handlers.DeleteURL)
 }

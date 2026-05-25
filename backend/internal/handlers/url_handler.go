@@ -6,6 +6,8 @@ import (
 	"github.com/Vijayhrithikk/shortly/internal/models"
 	"github.com/Vijayhrithikk/shortly/internal/services"
 
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -64,5 +66,33 @@ func GetMyURLs(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"urls": urls,
+	})
+}
+
+func DeleteURL(c *gin.Context) {
+	idParam := c.Param("id")
+
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid URL id",
+		})
+		return
+	}
+
+	userID := int(c.GetFloat64("user_id"))
+
+	err = services.DeleteUserURL(id, userID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to delete URL",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "URL deleted successfully",
 	})
 }

@@ -124,3 +124,14 @@ func GetURLsByUserID(userID int) ([]models.URL, error) {
 	}
 	return urls, nil
 }
+
+func DeleteURL(id int, userID int) error {
+	query := `
+		DELETE FROM urls
+		WHERE id = $1 AND user_id = $2
+	`
+
+	_, err := database.DB.Exec(query, id, userID)
+
+	return err
+}

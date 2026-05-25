@@ -74,3 +74,7 @@ func generateShortCode() string {
 func GetUserURLs(userID int) ([]models.URL, error) {
 	return repositories.GetURLsByUserID(userID)
 }
+
+func DeleteUserURL(id int, userID int) error {
+	return repositories.DeleteURL(id, userID)
+}
