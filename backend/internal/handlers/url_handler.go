@@ -19,7 +19,7 @@ func CreateShortURL(c *gin.Context) {
 		return
 	}
 
-	url, err := services.CreateShortURL(req.URL)
+	url, err := services.CreateShortURL(req.URL, req.CustomCode)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

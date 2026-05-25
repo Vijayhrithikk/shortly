@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"math/rand"
 	"strings"
 	"time"
@@ -9,17 +10,31 @@ import (
 	"github.com/Vijayhrithikk/shortly/internal/repositories"
 )
 
-func CreateShortURL(originalURL string) (*models.URL, error) {
+func CreateShortURL(originalURL string, customCode string) (*models.URL, error) {
 	normalizedURL := normalizeURL(originalURL)
 
-	shortCode := generateShortCode()
+	existingURL, err := repositories.GetURLByOriginal(normalizedURL)
+
+	if err == nil {
+		return existingURL, nil
+	}
+
+	shortCode := customCode
+
+	if shortCode == "" {
+		shortCode = generateShortCode()
+	}
+
+	if repositories.ShortCodeExists(shortCode) {
+		return nil, errors.New("short code already exists")
+	}
 
 	url := models.URL{
 		OriginalURL: normalizedURL,
 		ShortCode:   shortCode,
 	}
 
-	err := repositories.SaveURL(url)
+	err = repositories.SaveURL(url)
 
 	if err != nil {
 		return nil, err
