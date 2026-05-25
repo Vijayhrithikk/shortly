@@ -87,7 +87,7 @@ func DeleteURL(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to delete URL",
+			"error": err.Error(),
 		})
 		return
 	}

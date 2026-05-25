@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -13,10 +14,12 @@ import (
 func CreateShortURL(originalURL string, customCode string, userID int) (*models.URL, error) {
 	normalizedURL := normalizeURL(originalURL)
 
-	existingURL, err := repositories.GetURLByOriginal(userID, normalizedURL)
+	if customCode == "" {
+		existingURL, err := repositories.GetURLByOriginal(userID, normalizedURL)
 
-	if err == nil {
-		return existingURL, nil
+		if err == nil {
+			return existingURL, nil
+		}
 	}
 
 	shortCode := customCode
@@ -35,7 +38,7 @@ func CreateShortURL(originalURL string, customCode string, userID int) (*models.
 		UserID:      userID,
 	}
 
-	err = repositories.SaveURL(url)
+	err := repositories.SaveURL(url)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +48,24 @@ func CreateShortURL(originalURL string, customCode string, userID int) (*models.
 }
 
 func GetOriginalURL(code string) (*models.URL, error) {
-	return repositories.GetURLByCode(code)
+	cachedURL, err := repositories.GetCache(code)
+
+	if err == nil {
+		fmt.Println("Cache Hit")
+		return &models.URL{
+			OriginalURL: cachedURL,
+			ShortCode:   code,
+		}, nil
+	}
+	fmt.Println("Cache Miss")
+	url, err := repositories.GetURLByCode(code)
+	if err != nil {
+		return nil, err
+	}
+	_ = repositories.SetCache(code, url.OriginalURL)
+
+	return url, nil
+
 }
 
 func normalizeURL(url string) string {

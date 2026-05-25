@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"errors"
+
 	"github.com/Vijayhrithikk/shortly/internal/database"
 	"github.com/Vijayhrithikk/shortly/internal/models"
 )
@@ -131,7 +133,21 @@ func DeleteURL(id int, userID int) error {
 		WHERE id = $1 AND user_id = $2
 	`
 
-	_, err := database.DB.Exec(query, id, userID)
+	result, err := database.DB.Exec(query, id, userID)
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("URL not found")
+	}
+
+	return nil
 }
