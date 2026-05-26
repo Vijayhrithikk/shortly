@@ -50,3 +50,8 @@ func Login(email string, password string, cfg *config.Config) (string, error) {
 
 	return tokenString, nil
 }
+
+func FindUserByEmail(email string) error {
+	_, err := repositories.GetUserByEmail(email)
+	return err
+}

@@ -16,13 +16,14 @@ type Config struct {
 	DB_NAME     string
 	DB_SSLMODE  string
 	JWT_SECRET  string
+	REDIS_ADDR  string
 }
 
 func LoadConfig() *Config {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatal("Error loading .env file", err)
+		log.Println("Error loading .env file", err)
 	}
 	return &Config{
 		PORT:        os.Getenv("PORT"),
@@ -33,5 +34,6 @@ func LoadConfig() *Config {
 		DB_NAME:     os.Getenv("DB_NAME"),
 		DB_SSLMODE:  os.Getenv("DB_SSLMODE"),
 		JWT_SECRET:  os.Getenv("JWT_SECRET"),
+		REDIS_ADDR:  os.Getenv("REDIS_ADDR"),
 	}
 }

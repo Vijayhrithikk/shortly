@@ -52,6 +52,7 @@ func GetOriginalURL(code string) (*models.URL, error) {
 
 	if err == nil {
 		fmt.Println("Cache Hit")
+		_ = repositories.PushAnalyticsJob(code)
 		return &models.URL{
 			OriginalURL: cachedURL,
 			ShortCode:   code,
@@ -62,6 +63,7 @@ func GetOriginalURL(code string) (*models.URL, error) {
 	if err != nil {
 		return nil, err
 	}
+	_ = repositories.PushAnalyticsJob(code)
 	_ = repositories.SetCache(code, url.OriginalURL)
 
 	return url, nil

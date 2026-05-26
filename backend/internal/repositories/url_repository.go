@@ -25,7 +25,7 @@ func SaveURL(url models.URL) error {
 
 func GetURLByCode(code string) (*models.URL, error) {
 	query := `
-		SELECT id, original_url, short_code, created_at, user_id
+		SELECT id, original_url, short_code, created_at, user_id, clicks, last_accessed
 		FROM urls
 		WHERE short_code = $1
 	`
@@ -38,6 +38,8 @@ func GetURLByCode(code string) (*models.URL, error) {
 		&url.ShortCode,
 		&url.CreatedAt,
 		&url.UserID,
+		&url.Clicks,
+		&url.LastAccessed,
 	)
 
 	if err != nil {
@@ -49,7 +51,7 @@ func GetURLByCode(code string) (*models.URL, error) {
 
 func GetURLByOriginal(userID int, original string) (*models.URL, error) {
 	query := `
-		SELECT id, original_url, short_code, created_at, user_id
+		SELECT id, original_url, short_code, created_at, user_id, clicks, last_accessed
 		FROM urls
 		WHERE user_id = $1 and original_url = $2
 	`
@@ -62,6 +64,8 @@ func GetURLByOriginal(userID int, original string) (*models.URL, error) {
 		&url.ShortCode,
 		&url.CreatedAt,
 		&url.UserID,
+		&url.Clicks,
+		&url.LastAccessed,
 	)
 
 	if err != nil {
@@ -91,7 +95,7 @@ func ShortCodeExists(code string) bool {
 
 func GetURLsByUserID(userID int) ([]models.URL, error) {
 	query := `
-		SELECT id, original_url, short_code, user_id, created_at
+		SELECT id, original_url, short_code, user_id, created_at, clicks, last_accessed
 		FROM urls
 		WHERE user_id = $1
 		ORDER BY created_at DESC
@@ -116,6 +120,8 @@ func GetURLsByUserID(userID int) ([]models.URL, error) {
 			&url.ShortCode,
 			&url.UserID,
 			&url.CreatedAt,
+			&url.Clicks,
+			&url.LastAccessed,
 		)
 
 		if err != nil {
@@ -150,4 +156,14 @@ func DeleteURL(id int, userID int) error {
 	}
 
 	return nil
+}
+
+func IncrementClicks(code string) error {
+	query := `UPDATE urls
+			  SET clicks =  clicks+1,
+			      last_accessed = NOW()
+				  WHERE short_code = $1`
+	_, err := database.DB.Exec(query, code)
+
+	return err
 }

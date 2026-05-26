@@ -29,6 +29,14 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		})
 		return
 	}
+	exists := services.FindUserByEmail(req.Email)
+
+	if exists == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "user already exists",
+		})
+		return
+	}
 
 	err := services.SignUp(req.Email, req.Password)
 
