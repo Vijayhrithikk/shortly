@@ -44,8 +44,8 @@ func RedirectURL(c *gin.Context) {
 	url, err := services.GetOriginalURL(code)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "short URL not found",
+		c.JSON(404, gin.H{
+			"error": "page not found",
 		})
 		return
 	}
