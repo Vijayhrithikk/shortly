@@ -3,10 +3,8 @@ services:
     image: postgres:17
     container_name: shortly-postgres
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Vijay1234
-      POSTGRES_DB: shortly
+    env_file:
+      - ./backend/.env
     ports:
       - "5444:5432"
     volumes:
