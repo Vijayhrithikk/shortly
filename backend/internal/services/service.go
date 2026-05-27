@@ -2,11 +2,11 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"strings"
 	"time"
 
+	"github.com/Vijayhrithikk/shortly/internal/logger"
 	"github.com/Vijayhrithikk/shortly/internal/models"
 	"github.com/Vijayhrithikk/shortly/internal/repositories"
 )
@@ -51,14 +51,14 @@ func GetOriginalURL(code string) (*models.URL, error) {
 	cachedURL, err := repositories.GetCache(code)
 
 	if err == nil {
-		fmt.Println("Cache Hit")
+		logger.Log.Info("Cache Miss")
 		_ = repositories.PushAnalyticsJob(code)
 		return &models.URL{
 			OriginalURL: cachedURL,
 			ShortCode:   code,
 		}, nil
 	}
-	fmt.Println("Cache Miss")
+	logger.Log.Info("Cache Miss")
 	url, err := repositories.GetURLByCode(code)
 	if err != nil {
 		return nil, err

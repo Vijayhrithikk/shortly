@@ -4,10 +4,11 @@ import (
 	"net/http"
 
 	"github.com/Vijayhrithikk/shortly/config"
+	"github.com/Vijayhrithikk/shortly/internal/logger"
 	"github.com/Vijayhrithikk/shortly/internal/models"
 	"github.com/Vijayhrithikk/shortly/internal/services"
-
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type AuthHandler struct {
@@ -65,6 +66,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	token, err := services.Login(req.Email, req.Password, h.Config)
 
 	if err != nil {
+		logger.Log.Error("Invalid credentials", zap.String("email", req.Email))
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": err.Error(),
 		})

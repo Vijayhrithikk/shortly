@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/Vijayhrithikk/shortly/config"
 	"github.com/Vijayhrithikk/shortly/internal/database"
+	"github.com/Vijayhrithikk/shortly/internal/logger"
+	"github.com/Vijayhrithikk/shortly/internal/metrics"
 	"github.com/Vijayhrithikk/shortly/internal/middleware"
 	"github.com/Vijayhrithikk/shortly/internal/routes"
 	"github.com/gin-contrib/cors"
@@ -12,6 +14,10 @@ import (
 func main() {
 
 	cfg := config.LoadConfig()
+	logger.Init()
+
+	defer logger.Log.Sync()
+
 	database.ConnectDB(cfg)
 	database.ConnectRedis()
 	router := gin.Default()
@@ -33,6 +39,16 @@ func main() {
 		},
 	}))
 	router.Use(middleware.RateLimit())
+	router.Use(middleware.LoggerMiddleware())
+	metrics.Init()
+
+	router.Use(
+		middleware.PrometheusMiddleware(),
+	)
+	router.GET(
+		"/metrics",
+		gin.WrapH(promhttp.Handler()),
+	)
 	routes.SetupRoutes(router, cfg)
 	router.Run(":8080")
 }
