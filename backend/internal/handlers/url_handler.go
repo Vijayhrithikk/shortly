@@ -3,8 +3,10 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/Vijayhrithikk/shortly/internal/logger"
 	"github.com/Vijayhrithikk/shortly/internal/models"
 	"github.com/Vijayhrithikk/shortly/internal/services"
+	"go.uber.org/zap"
 
 	"strconv"
 
@@ -15,6 +17,9 @@ func CreateShortURL(c *gin.Context) {
 	var req models.ShortenRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
+		ip := c.ClientIP()
+		user := c.GetString("user_id")
+		logger.Log.Error("Invalid url entered", zap.String("By ip", ip), zap.String("user", user))
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid request body",
 		})
