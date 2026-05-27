@@ -23,9 +23,7 @@ func main() {
 	database.ConnectRedis()
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{
-			"http://localhost:5173",
-		},
+		AllowAllOrigins: true,
 		AllowMethods: []string{
 			"GET",
 			"POST",

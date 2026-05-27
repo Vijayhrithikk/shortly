@@ -64,8 +64,9 @@ func GetMyURLs(c *gin.Context) {
 	urls, err := services.GetUserURLs(userID)
 
 	if err != nil {
+		logger.Log.Error("Error")
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to fetch URLs",
+			"error": err.Error(),
 		})
 		return
 	}
