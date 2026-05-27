@@ -1,7 +1,7 @@
 import api from "./axios";
 
 export const getMyURLs = async () => {
-    const response = await api.get("my-urls")
+    const response = await api.get("/my-urls")
 
     return response.data
 }
