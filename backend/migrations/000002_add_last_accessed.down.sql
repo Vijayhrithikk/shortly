@@ -1,2 +1,2 @@
 ALTER TABLE urls
-DROP COLUMN last_accessed;
+DROP COLUMN last_accessed ;
