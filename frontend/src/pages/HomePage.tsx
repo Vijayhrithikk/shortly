@@ -7,7 +7,6 @@ export default function HomePage() {
   const navigate = useNavigate()
   const [url, setURL] = useState("")
   const [loading, setLoading] = useState(false)
-  const [isnotLoggedin,setnotLoggedin] = useState(true)
 
   const handleShorten = async () => {
     const token = localStorage.getItem("token")
