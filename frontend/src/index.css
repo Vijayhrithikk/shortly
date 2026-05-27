@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+html.dark {
+    color-scheme: dark;
+}
+
+body {
+    
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --font-serif: "Instrument Serif", serif;
+  --font-sans: "DM Sans", sans-serif;
+}

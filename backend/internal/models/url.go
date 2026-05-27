@@ -13,6 +13,6 @@ type URL struct {
 }
 
 type ShortenRequest struct {
-	URL        string `json:"url" binding:"required,url"`
+	URL        string `json:"url" binding:"required"`
 	CustomCode string `json:"custom_code"`
 }

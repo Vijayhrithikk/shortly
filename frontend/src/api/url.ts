@@ -1,6 +1,6 @@
 import api from "./axios";
 
-export const getMyUrls = async () => {
+export const getMyURLs = async () => {
     const response = await api.get("my-urls")
 
     return response.data
@@ -16,4 +16,9 @@ export const createShortURL = async (
   })
 
   return response.data
+}
+
+export const deleteURL = async ( id : number)=> {
+  const response = await api.delete(`/urls/${id}`)
+  return response
 }
