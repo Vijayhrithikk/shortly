@@ -2,14 +2,16 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 import { createShortURL } from "../api/url"
+import { useDarkMode } from "../App"
 
 export default function HomePage() {
   const navigate = useNavigate()
   const [url, setURL] = useState("")
   const [loading, setLoading] = useState(false)
+  const { darkMode, toggleDarkMode } = useDarkMode()
+  const token = localStorage.getItem("token")
 
   const handleShorten = async () => {
-    const token = localStorage.getItem("token")
     if (!token) { navigate("/login"); return }
     try {
       setLoading(true)
@@ -23,126 +25,114 @@ export default function HomePage() {
       setLoading(false)
     }
   }
- 
-  const token = localStorage.getItem("token")
-  return (
-    <div className="min-h-screen bg-[#F7F5F0] dark:bg-[#0C0C0C] font-['Instrument_Serif',serif] transition-colors duration-300">
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.025] dark:opacity-[0.04] z-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: "repeat",
-          backgroundSize: "128px",
-        }}
-      />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-8 pb-24">
-        <nav className="flex items-center justify-between mb-20">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-black dark:bg-white" />
-            <span className="text-xl font-['Instrument_Serif',serif] tracking-tight dark:text-white">
-              Shortly
-            </span>
+  return (
+    <div className="sy-page" style={{ minHeight: "100vh" }}>
+      <div className="sy-noise" />
+
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 960, margin: "0 auto", padding: "28px 24px 80px" }}>
+
+        {/* Navihation */}
+        <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 72 }}>
+          <div className="sy-wordmark">
+            <div className="sy-wordmark-dot" />
+            <span className="sy-wordmark-text">shortlyy</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button className="sy-theme-btn" onClick={toggleDarkMode} aria-label="Toggle theme">
+              {darkMode ? "☀️" : "🌙"}
+            </button>
             {!token ? (
-                <button
-                  onClick={() => navigate("/login")}
-                  className="px-4 py-2 text-sm font-['DM_Sans',sans-serif] text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
-                          >
-                   Sign in
-                </button>
-) : <button
-                  onClick={() => navigate("/dashboard")}
-                  className="px-4 py-2 text-sm font-['DM_Sans',sans-serif] text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
-                          >
-                   Dashboard
-                </button>}
+              <button
+                onClick={() => navigate("/login")}
+                style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--text-secondary)", fontFamily: "DM Sans, sans-serif", padding: "8px 12px", transition: "color 0.15s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
+              >
+                Sign in
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/dashboard")}
+                style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--text-secondary)", fontFamily: "DM Sans, sans-serif", padding: "8px 12px", transition: "color 0.15s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "var(--text-primary)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
+              >
+                Dashboard
+              </button>
+            )}
             <button
+              className="sy-btn sy-btn--pill"
+              style={{ padding: "8px 18px", fontSize: 13 }}
               onClick={() => navigate("/signup")}
-              className="px-4 py-2 text-sm font-['DM_Sans',sans-serif] bg-black dark:bg-white text-white dark:text-black rounded-full hover:opacity-85 transition-opacity"
             >
               Get started
             </button>
           </div>
         </nav>
 
-        {/* Hero */}
-        <div className="mb-20">
-          <div className="inline-flex items-center gap-2 bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-gray-800 rounded-full px-3 py-1 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-['DM_Sans',sans-serif] text-gray-600 dark:text-gray-400">
-              Live — Make URLs shortened today
-            </span>
+        {/* Main section */}
+        <div style={{ marginBottom: 64 }}>
+          <div className="sy-badge" style={{ marginBottom: 28 }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10B981", display: "inline-block", animation: "pulse 2s infinite" }} />
+            Live on shortlyy.in
           </div>
 
-          <h1 className="text-[clamp(3rem,8vw,6.5rem)] leading-[0.95] font-['Instrument_Serif',serif] tracking-tight text-black dark:text-white mb-6">
+          <h1 className="sy-serif" style={{
+            fontSize: "clamp(3rem, 9vw, 6.5rem)",
+            lineHeight: 0.93,
+            letterSpacing: "-0.02em",
+            color: "var(--text-primary)",
+            marginBottom: 20,
+            transition: "color 0.25s ease",
+          }}>
             Links that<br />
-            <em className="italic">tell a story.</em>
+            <em style={{ fontStyle: "italic" }}>tell a story.</em>
           </h1>
 
-          <p className="max-w-lg text-base font-['DM_Sans',sans-serif] text-gray-500 dark:text-gray-400 leading-relaxed">
+          <p style={{ maxWidth: 440, fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65, fontFamily: "DM Sans, sans-serif", transition: "color 0.25s ease" }}>
             Shorten, track, and share URLs with beautiful analytics, instant QR codes, and a dashboard built for clarity.
           </p>
         </div>
 
-        {/* Input */}
-        <div className="bg-white dark:bg-[#141414] border border-gray-200 dark:border-gray-800 rounded-2xl p-2 flex flex-col sm:flex-row gap-2 mb-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] dark:shadow-none max-w-2xl">
+        {/* input form */}
+        <div className="sy-card sy-card--static" style={{ padding: 6, display: "flex", flexDirection: "row", gap: 6, flexWrap: "wrap", maxWidth: 600, marginBottom: 12, boxShadow: "var(--shadow-card)" }}>
           <input
-            type="text"
+            className="sy-input"
+            style={{ flex: 1, minWidth: 200, background: "transparent", border: "none", borderRadius: 10, padding: "12px 14px" }}
             placeholder="Paste any URL…"
-            className="flex-1 bg-transparent px-4 py-3 text-sm font-['DM_Sans',sans-serif] text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none"
             value={url}
-            onChange={(e) => setURL(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleShorten()}
+            onChange={e => setURL(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleShorten()}
           />
-          <button
-            onClick={handleShorten}
-            disabled={loading}
-            className="bg-black dark:bg-white text-white dark:text-black text-sm font-['DM_Sans',sans-serif] font-medium px-6 py-3 rounded-xl hover:opacity-85 transition-opacity disabled:opacity-40 whitespace-nowrap"
-          >
+          <button className="sy-btn" disabled={loading} onClick={handleShorten} style={{ borderRadius: 10, padding: "12px 22px" }}>
             {loading ? "Shortening…" : "Shorten →"}
           </button>
         </div>
 
-        <p className="text-xs font-['DM_Sans',sans-serif] text-gray-400 dark:text-gray-600 mb-32">
+        <p style={{ fontSize: 11.5, color: "var(--text-muted)", marginBottom: 80, fontFamily: "DM Sans, sans-serif", transition: "color 0.25s ease" }}>
           Free to use · No credit card · Sign up to track clicks
         </p>
 
-        {/* Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* HEHE */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
           {[
-            {
-              icon: "📈",
-              label: "Analytics",
-              desc: "Real-time click tracking with beautiful charts for every link you create.",
-            },
-            {
-              icon: "⬛",
-              label: "QR Codes",
-              desc: "Instant QR generation for any shortened URL — scannable everywhere.",
-            },
-            {
-              icon: "⚡",
-              label: "Go-powered",
-              desc: "Built on Go, Redis & PostgreSQL for sub-millisecond redirects at scale.",
-            },
+            { icon: "📈", label: "Analytics", desc: "Real-time click tracking with beautiful charts for every link." },
+            { icon: "⬛", label: "QR Codes",  desc: "Instant QR generation — scannable anywhere you need it." },
+            { icon: "⚡", label: "Go-powered", desc: "Sub-millisecond redirects on Go, Redis & PostgreSQL." },
           ].map(({ icon, label, desc }) => (
-            <div
-              key={label}
-              className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-gray-800/60 rounded-2xl p-6 group hover:border-gray-300 dark:hover:border-gray-700 transition-colors"
-            >
-              <div className="text-2xl mb-4">{icon}</div>
-              <h3 className="text-base font-['DM_Sans',sans-serif] font-medium text-black dark:text-white mb-2">
-                {label}
-              </h3>
-              <p className="text-sm font-['DM_Sans',sans-serif] text-gray-500 dark:text-gray-500 leading-relaxed">
-                {desc}
-              </p>
+            <div key={label} className="sy-feature-card">
+              <div style={{ fontSize: 22, marginBottom: 12 }}>{icon}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 500, color: "var(--text-primary)", marginBottom: 6, fontFamily: "DM Sans, sans-serif", transition: "color 0.25s ease" }}>{label}</div>
+              <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.55, fontFamily: "DM Sans, sans-serif", transition: "color 0.25s ease" }}>{desc}</div>
             </div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+      `}</style>
     </div>
   )
 }
