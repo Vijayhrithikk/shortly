@@ -233,7 +233,7 @@ export default function DashboardPage() {
                   className="sy-url-short"
                   style={{ display: "block", marginBottom: 16, textDecoration: "none" }}
                 >
-                  shortlyy.in/{u.short_code}
+                  shortlyy.in/r/{u.short_code}
                 </a>
 
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
