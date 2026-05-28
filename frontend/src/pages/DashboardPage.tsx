@@ -56,7 +56,7 @@ export default function DashboardPage() {
   }
 
   const handleCopy = async (shortCode: string) => {
-    await navigator.clipboard.writeText(`http://shortlyy.in/${shortCode}`)
+    await navigator.clipboard.writeText(`http://shortlyy.in/r/${shortCode}`)
     toast.success("Copied to clipboard")
   }
 
@@ -228,7 +228,7 @@ export default function DashboardPage() {
                   {u.original_url}
                 </p>
                 <a
-                  href={`http://shortlyy.in/${u.short_code}`}
+                  href={`http://shortlyy.in/r/${u.short_code}`}
                   target="_blank"
                   className="sy-url-short"
                   style={{ display: "block", marginBottom: 16, textDecoration: "none" }}
@@ -243,7 +243,7 @@ export default function DashboardPage() {
                   </div>
                   <div style={{ display: "flex", gap: 7 }}>
                     <button className="sy-btn-ghost" onClick={() => handleCopy(u.short_code)}>Copy</button>
-                    <button className="sy-btn-ghost" onClick={() => setQRCode(`http://shortlyy.in/${u.short_code}`)}>QR</button>
+                    <button className="sy-btn-ghost" onClick={() => setQRCode(`http://shortlyy.in/r/${u.short_code}`)}>QR</button>
                     <button className="sy-btn-danger" onClick={() => handleDelete(u.id)}>Delete</button>
                   </div>
                 </div>
