@@ -25,7 +25,13 @@ export default function DashboardPage() {
     } catch (error) {
       console.error(error)
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.error)
+        const message = error.response?.data?.error
+        if (message === "invalid token"){
+          localStorage.removeItem("token")
+          navigate("/login")
+        }else{
+        toast.error(message)
+        }
       } else {
         toast.error("Something went wrong")
       }
