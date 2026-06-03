@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -18,7 +19,9 @@ func RateLimit() gin.HandlerFunc {
 			key,
 		).Result()
 		if err != nil {
+			log.Printf("rate limiter redis error: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
+
 				"error": "rate limiter failed",
 			})
 			c.Abort()
